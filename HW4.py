@@ -2,7 +2,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
 import numpy as np
-debug = True
+debug = False
 
 class Instance:
     def __init__(self, domain, label) -> None:
@@ -48,7 +48,11 @@ def plotNearestNeighbors(trainingSet, testSet):
             y = train.domain[1]
             plt.plot([x_test, x], [y_test, y], "o-", color=c, label = str(EuclideanDistance(test, train.domain)))
     plt.show()
-def main():
+
+def stringifyClassification(classification):
+    if classification <= 0: return "-"
+    else: return "+"
+def Exercise1():
     e1 = Instance((-3, 5), 1)
     e2 = Instance((-4, 2), 1)
     e3 = Instance(( 2, 1), -1)
@@ -67,23 +71,31 @@ def main():
     p1nearest3 = kNearestNeighbors(p1, trainingSet, 3)
     p2nearest3 = kNearestNeighbors(p2, trainingSet, 3)
 
+    print("(-2, 0)")
     p1class1 = neighborRegression(p1nearest1)
-    print(p1class1)
-
+    print("a)",stringifyClassification(p1class1))
     p2class1 = neighborRegression(p2nearest1)
-    print(p2class1)
+    print("b)",stringifyClassification(p2class1))
 
+    print("(-1, 5)")
     p1class3 = neighborRegression(p1nearest3)
-    print(p1class3)
-
+    print("a)",stringifyClassification(p1class3))
     p2class3 = neighborRegression(p2nearest3)
-    print(p2class3)
+    print("b)",stringifyClassification(p2class3))
 
     # plt.scatter(*zip(*[example.domain for example in trainingSet]), color = 'blue')
     # plt.scatter(*zip(p1, p2), color = 'red')
     #plotNearestNeighbors(trainingSet, (p1, p2))
     
-
+def Exercise2():
+    e1 = Instance((-3, 5), 1)
+    e2 = Instance((-4, 2), 1)
+    e3 = Instance(( 2, 1), -1)
+    e4 = Instance(( 4, 3), -1)
+    trainingSet = [e1, e2, e3, e4]
+    #Starting weights w0=w1=w2=0
+    #Learning rate n=0.1
+    #3 iterations
+    #What are the weights at the end of each iteration?
 if __name__ == "__main__":
-
-    main()
+    Exercise1()
