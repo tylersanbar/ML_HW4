@@ -5,8 +5,8 @@ import numpy as np
 debug = False
 
 class Instance:
-    def __init__(self, domain, label) -> None:
-        self.domain = domain
+    def __init__(self, attributes, label=None) -> None:
+        self.attributes = attributes
         self.label = label
 
 def EuclideanDistance(p1, p2):
@@ -19,14 +19,14 @@ def kNearestNeighbors(point, instances, k):
     distances = list()
     if debug: print(k,"nearest neighbors to", point)
     for instance in instances:
-        dist = EuclideanDistance(point, instance.domain)
+        dist = EuclideanDistance(point, instance.attributes)
         distances.append((instance, dist))
-        if debug: print("Point:", instance.domain, " Distance:", dist)
+        if debug: print("Point:", instance.attributes, " Distance:", dist)
     distances.sort(key=lambda tup: tup[1])
     neighbors = list()
     for i in range(k):
         neighbors.append(distances[i][0])
-    if debug: print("Nearest are:", ([n.domain for n in neighbors]))
+    if debug: print("Nearest are:", ([n.attributes for n in neighbors]))
     return neighbors
 
 def neighborRegression(neighbors):
@@ -44,9 +44,9 @@ def plotNearestNeighbors(trainingSet, testSet):
         x_test = test[0]
         y_test = test[1]
         for train in trainingSet:
-            x = train.domain[0]
-            y = train.domain[1]
-            plt.plot([x_test, x], [y_test, y], "o-", color=c, label = str(EuclideanDistance(test, train.domain)))
+            x = train.attributes[0]
+            y = train.attributes[1]
+            plt.plot([x_test, x], [y_test, y], "o-", color=c, label = str(EuclideanDistance(test, train.attributes)))
     plt.show()
 
 def stringifyClassification(classification):
@@ -83,7 +83,7 @@ def Exercise1():
     p2class3 = neighborRegression(p2nearest3)
     print("b)",stringifyClassification(p2class3))
 
-    # plt.scatter(*zip(*[example.domain for example in trainingSet]), color = 'blue')
+    # plt.scatter(*zip(*[example.attributes for example in trainingSet]), color = 'blue')
     # plt.scatter(*zip(p1, p2), color = 'red')
     #plotNearestNeighbors(trainingSet, (p1, p2))
 
@@ -114,7 +114,7 @@ def Exercise2():
         for j in range(len(trainingSet)):
             w = weights[j]
             e = trainingSet[j]
-            x = [1] + list(e.domain)
+            x = [1] + list(e.attributes)
             t = e.label
             o = sgn(w, x)
             if o == t: continue
@@ -122,5 +122,56 @@ def Exercise2():
                 for k in range(len(w)):
                     w[k] = pUpdate(w[k], n, t, o, x[k])
         print(weights)
+
+def distanceWeightedNeighborRegression(instance, neighbors):
+    h = 0
+    w_sum = 0
+    for neighbor in neighbors:
+        w = 1 / (EuclideanDistance(instance, neighbor.attributes))**2
+        h += w * neighbor.label
+        w_sum += w
+    h /= w_sum
+    if debug: print("Label average:", h)
+    return h
+def Exercise3():
+    e1 = Instance((1.2,), 3.2)
+    e2 = Instance((2.8,), 8.5)
+    e3 = Instance((2.0,), 4.7)
+    e4 = Instance((0.9,), 2.9)
+    e5 = Instance((5.1,),11.0)
+    trainingSet = (e1, e2, e3, e4, e5)
+    p1 = (1.5,)
+    p2 = (4.5,)
+
+    print("a)")
+    p1_3_nearest = kNearestNeighbors(p1, trainingSet, 3)
+    print([p.attributes for p in p1_3_nearest])
+    print(neighborRegression(p1_3_nearest))
+    p2_3_nearest = kNearestNeighbors(p2, trainingSet, 3)
+    print([p.attributes for p in p2_3_nearest])
+    print(neighborRegression(p2_3_nearest))
+
+    print("b)")
+    print(distanceWeightedNeighborRegression(p1, p1_3_nearest))
+    print(distanceWeightedNeighborRegression(p2, p2_3_nearest))
+def rss(h, c):
+    sum = 0
+    x = "?"
+    for i in range(m):
+        sum += (c(x[i]) - h(x[i]))**2
+def cumulativeLoss(h, c):
+    return .5 * rss(h, c)
+def Exercise4():
+    e1 = Instance((1.2,), 3.2)
+    e2 = Instance((2.8,), 8.5)
+    e3 = Instance((2.0,), 4.7)
+    e4 = Instance((0.9,), 2.9)
+    e5 = Instance((5.1,),11.0)
+    trainingSet = (e1, e2, e3, e4, e5)
+
+    w0 = 1
+    w1 = 1
 if __name__ == "__main__":
-    Exercise2()
+    #Exercise1()
+    #Exercise2()
+    Exercise3()
