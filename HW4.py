@@ -86,7 +86,17 @@ def Exercise1():
     # plt.scatter(*zip(*[example.domain for example in trainingSet]), color = 'blue')
     # plt.scatter(*zip(p1, p2), color = 'red')
     #plotNearestNeighbors(trainingSet, (p1, p2))
-    
+
+def sgn(w, x):
+    sum = 0
+    for i in range(len(x)):
+        sum += w[i] * x[i]
+    if sum > 0: return 1
+    else: return -1
+
+def pUpdate(w, n, t, o, x):
+    return w + n*(t-o)*x
+
 def Exercise2():
     e1 = Instance((-3, 5), 1)
     e2 = Instance((-4, 2), 1)
@@ -97,5 +107,20 @@ def Exercise2():
     #Learning rate n=0.1
     #3 iterations
     #What are the weights at the end of each iteration?
+    iterations = 3
+    weights = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    n = 0.1
+    for i in range(iterations):
+        for j in range(len(trainingSet)):
+            w = weights[j]
+            e = trainingSet[j]
+            x = [1] + list(e.domain)
+            t = e.label
+            o = sgn(w, x)
+            if o == t: continue
+            else: 
+                for k in range(len(w)):
+                    w[k] = pUpdate(w[k], n, t, o, x[k])
+        print(weights)
 if __name__ == "__main__":
-    Exercise1()
+    Exercise2()
