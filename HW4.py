@@ -154,13 +154,49 @@ def Exercise3():
     print("b)")
     print(distanceWeightedNeighborRegression(p1, p1_3_nearest))
     print(distanceWeightedNeighborRegression(p2, p2_3_nearest))
+
+def h(x, w):
+    sum = 0
+    for i in range(x):
+        sum += w[i] * x[i]
+    return sum
+
+def c(x):
+    return x.label
+
 def rss(h, c):
     sum = 0
+    m = len(x)
     x = "?"
     for i in range(m):
         sum += (c(x[i]) - h(x[i]))**2
+
 def cumulativeLoss(h, c):
     return .5 * rss(h, c)
+
+def weightOutput(w, x):
+    sum = 0
+    for i in range(len(x)):
+        sum += w[i] * x[i]
+    return sum
+def GradientDecent(trainingExamples, n, iterations, weights = None):
+    dim = len(trainingExamples[0].attributes) + 1
+    w = weights
+    if not weights: w = [0] * dim
+    for iter in range(iterations):
+        dW = [0] * dim
+        for example in trainingExamples:
+            x = [1] + list(example.attributes)
+            t = example.label
+            
+            for i in range(dim):
+                o = weightOutput(w, x)
+                dW[i] += n * (t - o) * x[i]
+        for j in range(dim):
+            w[j] += dW[j]
+        print("Iteration:",iter+1,"\nw0:",w[0],"\nw1:",w[1])
+    return w
+
 def Exercise4():
     e1 = Instance((1.2,), 3.2)
     e2 = Instance((2.8,), 8.5)
@@ -171,7 +207,21 @@ def Exercise4():
 
     w0 = 1
     w1 = 1
+    weights = [w0, w1]
+    n = 0.01
+    iterations = 3
+    print("a)")
+    weights = GradientDecent(trainingSet, n, iterations, weights)
+
+    x1 = (1.5,)
+    x2 = (4.5,)
+    predict1 = weightOutput(weights, x1)
+    predict2 = weightOutput(weights, x2)
+    print("b)")
+    print("Point: 1.5, Value:", predict1)
+    print("Point: 4.5, Value:", predict2)
 if __name__ == "__main__":
     #Exercise1()
     #Exercise2()
-    Exercise3()
+    #Exercise3()
+    Exercise4()
