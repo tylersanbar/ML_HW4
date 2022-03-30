@@ -52,9 +52,10 @@ def plotNearestNeighbors(trainingSet, testSet):
 def stringifyClassification(classification):
     if classification <= 0: return "-"
     else: return "+"
+    
 def Exercise1():
     e1 = Instance((-3, 5), 1)
-    e2 = Instance((-4, 2), 1)
+    e2 = Instance((-4, -2), 1)
     e3 = Instance(( 2, 1), -1)
     e4 = Instance(( 4, 3), -1)
     trainingSet = [e1, e2, e3, e4]
@@ -83,9 +84,9 @@ def Exercise1():
     p2class3 = neighborRegression(p2nearest3)
     print("b)",stringifyClassification(p2class3))
 
-    # plt.scatter(*zip(*[example.attributes for example in trainingSet]), color = 'blue')
-    # plt.scatter(*zip(p1, p2), color = 'red')
-    #plotNearestNeighbors(trainingSet, (p1, p2))
+    plt.scatter(*zip(*[example.attributes for example in trainingSet]), color = 'blue')
+    plt.scatter(*zip(p1, p2), color = 'red')
+    plotNearestNeighbors(trainingSet, (p1, p2))
 
 def sgn(w, x):
     sum = 0
@@ -99,7 +100,7 @@ def pUpdate(w, n, t, o, x):
 
 def Exercise2():
     e1 = Instance((-3, 5), 1)
-    e2 = Instance((-4, 2), 1)
+    e2 = Instance((-4, -2), 1)
     e3 = Instance(( 2, 1), -1)
     e4 = Instance(( 4, 3), -1)
     trainingSet = [e1, e2, e3, e4]
@@ -133,6 +134,7 @@ def distanceWeightedNeighborRegression(instance, neighbors):
     h /= w_sum
     if debug: print("Label average:", h)
     return h
+
 def Exercise3():
     e1 = Instance((1.2,), 3.2)
     e2 = Instance((2.8,), 8.5)
@@ -221,7 +223,7 @@ def Exercise4():
     print("Point: 1.5, Value:", predict1)
     print("Point: 4.5, Value:", predict2)
 if __name__ == "__main__":
-    #Exercise1()
+    Exercise1()
     #Exercise2()
     #Exercise3()
-    Exercise4()
+    #Exercise4()
